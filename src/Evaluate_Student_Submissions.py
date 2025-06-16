@@ -12,9 +12,29 @@ from tqdm import tqdm
 
 TEST_DIR = "./Data/Test"
 SUBMISSION_DIR = "./Student_Submissions"
+MUSTER_LABEL_TXT = "./Student_Submissions/Max_Mustermann/labels.txt"
 
+#TODO: Visualisierung der Ergebnisse
+#TODO: Testset erweitern, um mehr Bilder pro Klasse zu haben
 
 start = time.time()
+
+def check_labelsTXT(student, mustermann_dir=MUSTER_LABEL_TXT):
+    """
+    Check if the labels.txt file exists in the student directory.
+    It also checks whether the label file matches the sample file.
+    """
+    label_path = os.path.join(student, "labels.txt")
+    if not os.path.exists(label_path):
+        print(f"labels.txt not found in {student}")
+    with open(label_path, "r") as f:
+        student_labels = f.readlines()
+    with open(mustermann_dir, "r") as f:
+        mustermann_labels = f.readlines()
+    if student_labels != mustermann_labels:
+        #print(f"Labels do not match for {student}. Expected: {mustermann_labels}, Found: {student_labels}")
+        raise ValueError(f"Labels in {label_path} do not match the expected labels in {mustermann_dir}. Please check your labels.txt file.")
+
 
 def load_model_function(model_path):
     """
@@ -53,27 +73,44 @@ def unzip_submissions(directory: str) -> None:
             if not os.path.exists(extract_dir):
                 with zipfile.ZipFile(zip_path, "r") as zip_ref:
                     zip_ref.extractall(extract_dir)
+            check_labelsTXT(extract_dir)
 
 
 def evaluate_student(student_dir: str, test_images: list[str]) -> dict:
     """Return accuracy and mean confidence for a single student model."""
+    english_to_german = {
+        "cat": "katze",
+        "dog": "hund",
+        "horse": "pferd",
+        "cow": "kuh",
+        "chicken": "huhn"
+    }
+
     model_path = os.path.join(student_dir, "keras_model.h5")
     labels_path = os.path.join(student_dir, "labels.txt")
 
     model = load_model_function(model_path)
-    with open(labels_path, "r") as f:
-        class_names = f.read().splitlines()
+
+    with open(labels_path, "r", encoding="utf-8") as f:
+        entries = [line.strip().split(maxsplit=1) for line in f if line.strip()]
+
+    # 2) Dictionary bauen: index → Name
+    index_to_name = {int(idx): name for idx, name in entries}
+    # 3) class_names-Liste erzeugen (geordnet nach index)
+    class_names = [index_to_name[i] for i in sorted(index_to_name)]
 
     correct = 0
     confidences = []
 
     for img_name in tqdm(test_images, desc=os.path.basename(student_dir), leave=False):
         gt_label = img_name.split("_")[0].lower()
+        gt_label = english_to_german.get(gt_label,)  # Convert to German
         image_path = os.path.join(TEST_DIR, img_name)
         pred_name, confidence = predict(model, class_names, image_path)
-        confidences.append(confidence)
+        #print(f'Image: {img_name}, Predicted: {pred_name}, Confidence: {confidence:.2f}, GT: {gt_label}')
         if pred_name == gt_label:
             correct += 1
+            confidences.append(confidence)
 
     accuracy = correct / len(test_images) if test_images else 0
     mean_confidence = float(np.mean(confidences)) if confidences else 0.0
