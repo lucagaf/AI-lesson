@@ -14,7 +14,7 @@ MUSTER_LABEL_TXT = "./Student_Submissions/Max_Mustermann/labels.txt"
 
 #TODO: Testset erweitern, um mehr Bilder pro Klasse zu haben
 
-start = time.time()
+global_start = time.time()
 
 def check_labelsTXT(student, mustermann_dir=MUSTER_LABEL_TXT):
     """
@@ -119,17 +119,19 @@ def evaluate_student(student_dir: str, test_images: list[str]) -> dict:
 
 def main() -> None:
     unzip_submissions(SUBMISSION_DIR)
-
     test_images = [img for img in os.listdir(TEST_DIR) if img.lower().endswith((".jpg", ".jpeg", ".png"))]
     results = []
     for student in os.listdir(SUBMISSION_DIR):
+        start_student = time.time()
         student_path = os.path.join(SUBMISSION_DIR, student)
         if student.startswith(".") or not os.path.isdir(student_path):
             continue
         metrics = evaluate_student(student_path, test_images)
         results.append({"student": student, **metrics})
+
         end_student = time.time()
-        print(f"Evaluation for {student} completed in {end_student - start:.2f} seconds")
+        stud_duration = end_student - start_student
+        print(f"Evaluation for {student} completed in {stud_duration:.2f} seconds")
 
     # Sort by accuracy then mean confidence
     leaderboard = sorted(results, key=lambda x: (x["accuracy"], x["mean_confidence"]), reverse=True)
@@ -145,5 +147,5 @@ def main() -> None:
 if __name__ == "__main__":
     main()
     end = time.time()
-    print(f"Evaluation finished in {end - start:.2f} seconds")
+    print(f"Evaluation finished in {end - global_start:.2f} seconds")
 

@@ -1,5 +1,0 @@
-0 Katze
-1 Hund
-2 Pferd
-3 Kuh
-4 Huhn

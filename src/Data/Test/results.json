@@ -1,12 +1,22 @@
 [
   {
     "student": "Lena_Trainer",
-    "accuracy": 0.9,
-    "mean_confidence": 0.8896899620691935
+    "accuracy": 0.635,
+    "mean_confidence": 0.8870080940601394
+  },
+  {
+    "student": "Huni_Mika",
+    "accuracy": 0.5575,
+    "mean_confidence": 0.7932920097770177
   },
   {
     "student": "Max_Mustermann",
-    "accuracy": 0.7,
-    "mean_confidence": 0.9385849748338971
+    "accuracy": 0.4775,
+    "mean_confidence": 0.7897547361738395
+  },
+  {
+    "student": "Zehni_Loris",
+    "accuracy": 0.41,
+    "mean_confidence": 0.6368089456383775
   }
 ]
