@@ -24,7 +24,7 @@ def plot_overall_accuracy(results: List[Dict[str, float]]) -> None:
     plt.bar(x, accuracies, color="skyblue")
     plt.xlabel("Student")
     plt.ylabel("Accuracy")
-    plt.title("Accuracy of all students")
+    plt.title("Accuracy von allen Schüler:innen")
     plt.xticks(x, [str(i) for i in x])
     plt.ylim(0, 1)
     plt.tight_layout()
@@ -51,7 +51,7 @@ def plot_top3(results: List[Dict[str, float]]) -> None:
 
     plt.xlabel("Student")
     plt.ylabel("Value")
-    plt.title("Top 3 Students")
+    plt.title("Top 3 Schüler:innen")
     plt.xticks(x, names)
     plt.ylim(0, 1)
     plt.legend()
