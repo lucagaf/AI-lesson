@@ -1,5 +1,3 @@
-"""Evaluate submitted Teachable Machine models on a common test set."""
-
 import json
 import os
 import time
@@ -14,7 +12,6 @@ TEST_DIR = "./Data/Test"
 SUBMISSION_DIR = "./Student_Submissions"
 MUSTER_LABEL_TXT = "./Student_Submissions/Max_Mustermann/labels.txt"
 
-#TODO: Visualisierung der Ergebnisse
 #TODO: Testset erweitern, um mehr Bilder pro Klasse zu haben
 
 start = time.time()
@@ -131,6 +128,8 @@ def main() -> None:
             continue
         metrics = evaluate_student(student_path, test_images)
         results.append({"student": student, **metrics})
+        end_student = time.time()
+        print(f"Evaluation for {student} completed in {end_student - start:.2f} seconds")
 
     # Sort by accuracy then mean confidence
     leaderboard = sorted(results, key=lambda x: (x["accuracy"], x["mean_confidence"]), reverse=True)

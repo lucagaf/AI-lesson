@@ -27,8 +27,13 @@ def plot_leaderboard_all(results: List[Dict[str, float]]) -> None:
 
     plt.xlabel("Student")
     plt.ylabel("Accuracy")
-    plt.title("Accuracy of all students")
+
+    # plt.title("Accuracy of all students")
     plt.xticks(x, names, rotation=45, ha="right")
+
+    plt.title("Accuracy von allen Schüler:innen")
+    # plt.xticks(x, [str(i) for i in x])
+
     plt.ylim(0, 1)
 
     for bar, acc in zip(bars, accuracies):
@@ -58,8 +63,9 @@ def plot_second_and_third(results: List[Dict[str, float]]) -> None:
     plt.figure(figsize=(6, 4))
     plt.bar(x, accuracies, color="steelblue")
     plt.xlabel("Student")
-    plt.ylabel("Accuracy")
-    plt.title("2nd and 3rd Place")
+
+    plt.ylabel("Value")
+    plt.title("Top 3 Schüler:innen")
     plt.xticks(x, names)
     plt.ylim(0, 1)
     plt.tight_layout()
